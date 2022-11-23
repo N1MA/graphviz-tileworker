@@ -1,0 +1,22 @@
+{
+  "name": "@graphviz/tile-worker",
+  "version": "1.0.0",
+  "author": "N1Ma",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon",
+    "build": "rimraf ./dist && tsc",
+    "start": "npm run build && node dist/worker.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "dotenv": "^16.0.3",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@graph-viz/core": "file:../core/graph-viz-core-1.0.0.tgz",
+    "@supabase/storage-js": "^2.0.0",
+    "bullmq": "^3.2.2"
+  }
+}
