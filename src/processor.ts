@@ -1,35 +1,38 @@
 import { ForceGraph, GraphLink, GraphNode, GraphOptions } from '@graph-viz/core';
 import { Processor } from 'bullmq';
 import * as fs from 'fs';
+import * as dotenv from "dotenv"
+import { env } from "process";
+import { StorageClient } from '@supabase/storage-js'
 
-function cleanUpDir(path: string, zoomLevels: number) {
-  if (fs.existsSync(path)) {
-    fs.rmSync(path, { recursive: true, force: true });
-  }
+dotenv.config();
 
-  fs.mkdirSync(`${path}/tiles`, { recursive: true });
 
-  for (let i = 0; i < zoomLevels; i++) {
-    fs.mkdirSync(`${path}/tiles/${i + 1}`);
-  }
-}
+const STORAGE_URL = `https://${env.SUPABASE_REF}.supabase.co/storage/v1`
+const SERVICE_KEY = String(env.SUPABASE_SERVICE_KEY);
+const BUCKET = String(env.SUPABASE_STORAGE_BUCKET);
+
+const storageClient = new StorageClient(STORAGE_URL, {
+  apikey: SERVICE_KEY,
+  Authorization: `Bearer ${SERVICE_KEY}`,
+})
+
 
 type WorkerDataType = { inputFile: string; options: GraphOptions };
 
 const processor: Processor<WorkerDataType, void, string> = async (job) => {
-  let options = job.data.options;
+  job.data.options.store = async (buffer: Buffer, slug: string) => {
+    await storageClient.from(BUCKET).upload(job.id + "/" + slug, buffer);
+  }
+  const { data, error } = await storageClient.from("@graphviz-inputs").download(job.data.inputFile)
+  if (error) throw error;
 
-  if (options)
-    options.path = String(options.path).endsWith('/')
-      ? options.path + job.id
-      : `${options.path}/${job.id}`;
-
-  const parsed = JSON.parse(fs.readFileSync(job.data.inputFile).toString());
+  const parsed = JSON.parse(await data.text());
   const nodes = <GraphNode[]>parsed.nodes;
   const links = <GraphLink[]>parsed.links;
-  const graph = new ForceGraph(Array.from(nodes.values()), links, options);
+  const graph = new ForceGraph(Array.from(nodes.values()), links, job.data.options);
 
-  cleanUpDir(options.path, options.zoomLevels);
+
 
   graph.on('progress', (e) => {
     job.updateProgress(e);
