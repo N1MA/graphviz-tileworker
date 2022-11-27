@@ -1,6 +1,5 @@
 import { ForceGraph, GraphLink, GraphNode, GraphOptions } from '@graph-viz/core';
 import { Processor } from 'bullmq';
-import * as fs from 'fs';
 import * as dotenv from "dotenv"
 import { env } from "process";
 import { StorageClient } from '@supabase/storage-js'
