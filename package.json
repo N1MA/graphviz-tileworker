@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "author": "N1Ma",
   "license": "MIT",
-  "main": "worker.js",
+  "main": "index.js",
   "scripts": {
     "start:dev": "nodemon",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/worker.js"
+    "start": "npm run build && node dist/index.js"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
