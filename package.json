@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "N1Ma",
   "license": "MIT",
+  "main": "worker.js",
   "scripts": {
     "start:dev": "nodemon",
     "build": "rimraf ./dist && tsc",
