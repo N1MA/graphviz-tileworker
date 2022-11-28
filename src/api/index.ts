@@ -1,6 +1,6 @@
 import { Worker } from 'bullmq';
 import { env } from 'process';
-import processor from './processor';
+import processor from '../processor';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +8,7 @@ dotenv.config();
 const connection = {
   host: env.REDIS_HOST!,
   port: Number(env.REDIS_PORT),
-  password: env.REDIS_PASSWORD
+  password: env.REDIS_PASSWORD,
 };
 
 const worker = new Worker('graph-viz', processor, { connection });
