@@ -15,7 +15,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@graph-viz/core": "git+https://<github_token>:x-oauth-basic@github.com/N1MA/graphviz-core.git",
+    "@graph-viz/core": "git+https://<GITHUB_TOKEN>:x-oauth-basic@github.com/N1MA/graphviz-core.git",
     "@supabase/storage-js": "^2.0.0",
     "bullmq": "^3.2.2"
   }
